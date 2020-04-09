@@ -1,0 +1,25 @@
+@startuml
+ReentrantLock -> Sync: lock
+Sync --> NonfairSync: lock
+NonfairSync-->AQS:compareAndSetState
+AQS-->Unsafe:compareAndSwapInt
+Unsafe-->AQS
+AQS-->NonfairSync
+NonfairSync-->AQS:setExclusiveOwnerThread
+AQS-->NonfairSync
+NonfairSync-->ReentrantLock
+
+
+ReentrantLock-->Sync:unlock
+Sync-->AQS:release
+AQS-->NonfairSync:tryRelease
+NonfairSync-->AQS:getState
+NonfairSync-->NonfairSync
+NonfairSync-->AQS:setExclusiveOwnerThread
+AQS-->NonfairSync
+NonfairSync-->AQS:setState
+
+AQS-->AQS:tryRelease
+AQS-->NonfairSync
+NonfairSync-->ReentrantLock
+@enduml
